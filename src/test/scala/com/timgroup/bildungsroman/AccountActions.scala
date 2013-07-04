@@ -27,7 +27,7 @@ object AccountActions extends MustMatchers {
   
   def hasABalanceOf(amount: BigDecimal) = new {
     def in(accountRef: Ref[AccountId]) = { user: User =>
-      for { account <- (accountRef.map(Accounts.get _)) } yield (account.balance must be(amount))
+      accountRef.map { id => Accounts.get(id).balance must be(amount) }
     }
   }
 }
