@@ -1,4 +1,22 @@
 bildungsroman
 =============
 
-Narrative for Scala
+[Narrative](http://github.com/youdevise/narrative)-style testing for Scala - see [this blogpost](https://devblog.timgroup.com/2013/07/05/narrative-style-testing-with-bildungsroman/) for details.
+
+Example code:
+
+```scala
+describe("A calculator") {
+  it("adds two numbers") {
+    calculatorContext.verify(for {
+      _ <- givenThe(operator) { presses('2') }
+                   .andThen   { presses('+') }
+                   .andThen   { presses('2') }
+
+      _ <- whenThe(operator)  { presses('=') }
+
+      _ <- thenThe(operator)  { seesTheDisplayedValue('4') }
+    } yield ())
+  }
+}
+```
