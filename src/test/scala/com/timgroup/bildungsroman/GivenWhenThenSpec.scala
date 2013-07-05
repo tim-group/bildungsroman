@@ -56,10 +56,11 @@ class GivenWhenThenSpec extends FunSpec with MustMatchers {
   describe("Thens") {
     it("compose with Givens and Whens") {
       defaultAccountsContext.verify(for {
-        _ <- givenThe(testUser)    { createsAnAccount(accountRef) }
-        _ <- andThe(otherTestUser) { createsAnAccount(otherAccountRef) }
-        _ <- andThe(testUser)      { deposits(accountRef, 100) }
-        _ <- andThe(otherTestUser) { deposits(otherAccountRef, 200) }
+        _ <- givenThe(testUser)      { createsAnAccount(accountRef) }
+             .andThen                { deposits(accountRef, 40) }
+             .andThen                { deposits(accountRef, 60) }
+        _ <- givenThe(otherTestUser) { createsAnAccount(otherAccountRef) }
+             .andThen                { deposits(otherAccountRef, 200) }
 
         _ <- whenThe(admin)        { transfers(accountRef, otherAccountRef, 50) }
         
