@@ -3,13 +3,13 @@ package com.timgroup.bildungsroman
 import org.scalatest._
 import org.scalatest.matchers.MustMatchers
 
-import Accounts.AccountId
+import Accounts._
 import AccountActions._
 
 class GivenWhenThenSpec extends FunSpec with MustMatchers with GivenWhenThen {
 
-  val accountRef = ref[AccountId]
-  val otherAccountRef = ref[AccountId]
+  val accountRef = Ref[AccountId]("account")
+  val otherAccountRef = Ref[AccountId]("other account")
   val testUser = User("test user")
   val otherTestUser = User("other test user")
   val admin = User("admin")
@@ -17,28 +17,28 @@ class GivenWhenThenSpec extends FunSpec with MustMatchers with GivenWhenThen {
   describe("Givens") {
 
     it("populate the test context") {
-      val (context, id) = verify(
+      val (context, id) = defaultAccountsContext.verify(
         givenThe(testUser) { user =>
-          accountRef := Accounts.create(user)
+          accountsRef.flatMap(accounts => accountRef := accounts.create(user))
         })
 
-      context(accountRef).value must be(id)
+      context(accountRef) must be(id)
     }
 
     it("can be composed") {
-      val (context, (firstAccountId, secondAccountId)) = verify(for {
+      val (context, (firstAccountId, secondAccountId)) = defaultAccountsContext.verify(for {
         firstAccountId  <- givenThe(testUser)      { createsAnAccount(accountRef) }
         secondAccountId <- givenThe(otherTestUser) { createsAnAccount(otherAccountRef) }
       } yield (firstAccountId, secondAccountId))
 
-      context(accountRef).value must be(firstAccountId)
-      context(otherAccountRef).value must be(secondAccountId)
+      context(accountRef) must be(firstAccountId)
+      context(otherAccountRef) must be(secondAccountId)
     }
   }
 
   describe("Whens") {
     it("compose with Givens") {
-      val (context, (newBalance1, newBalance2)) = verify(for {
+      val (context, (newBalance1, newBalance2)) = defaultAccountsContext.verify(for {
         _ <- givenThe(testUser)      { createsAnAccount(accountRef) }
         _ <- givenThe(otherTestUser) { createsAnAccount(otherAccountRef) }
         _ <- givenThe(testUser)      { deposits(accountRef, 100) }
@@ -54,7 +54,7 @@ class GivenWhenThenSpec extends FunSpec with MustMatchers with GivenWhenThen {
   
   describe("Thens") {
     it("compose with Givens and Whens") {
-      verify(for {
+      defaultAccountsContext.verify(for {
         _ <- givenThe(testUser)    { createsAnAccount(accountRef) }
         _ <- andThe(otherTestUser) { createsAnAccount(otherAccountRef) }
         _ <- andThe(testUser)      { deposits(accountRef, 100) }

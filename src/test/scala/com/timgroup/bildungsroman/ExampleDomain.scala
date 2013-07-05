@@ -1,11 +1,13 @@
 package com.timgroup.bildungsroman
 
+import GivenWhenThen._
+
 case class User(name: String)
 case class Account(id: Int, owner: User, balance: BigDecimal)
 
-object Accounts {
+case class Accounts() {
   
-  type AccountId = Int
+  import Accounts.AccountId
   
   var accounts = Map.empty[AccountId, Account]
   def create(owner: User): AccountId = {
@@ -20,4 +22,8 @@ object Accounts {
     accounts = accounts.updated(id, newAccount)
     newBalance
   }
+}
+
+object Accounts {
+  type AccountId = Int
 }
