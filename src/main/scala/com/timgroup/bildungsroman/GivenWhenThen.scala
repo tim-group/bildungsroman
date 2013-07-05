@@ -5,18 +5,27 @@ import Scalaz._
 
 trait GivenWhenThen {
 
-  val the = GivenWhenThen
-  val givenThe = GivenWhenThen
-  val whenThe = GivenWhenThen
-  val thenThe = GivenWhenThen
-  val andThe = GivenWhenThen
+  object DoWithActor {
+    def apply[A, B](input: A)(f: A => GWTState[B]): GWTState[B] = f(input)
+  }
+  
+  val the = DoWithActor
+  val givenThe = DoWithActor
+  val whenThe = DoWithActor
+  val thenThe = DoWithActor
+  val andThe = DoWithActor
+  
+  object DoWithoutActor {
+    def apply[A](s: GWTState[A]): GWTState[A] = s
+  }
+  val given_ = DoWithoutActor
+  val when_ = DoWithoutActor
+  val then_ = DoWithoutActor
+  val and_ = DoWithoutActor
 
   type GWTState[A] = State[Context, A]
-  def apply[A, B](input: A)(f: A => GWTState[B]): GWTState[B] = f(input)
 
   def verify[A](s: GWTState[A], context: Context = Context.empty): (Context, A) = context.verify[A](s)
-  
-  def ref[A] = Ref[A]()
 }
 
 object GivenWhenThen extends GivenWhenThen

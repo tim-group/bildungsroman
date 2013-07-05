@@ -5,8 +5,9 @@ import org.scalatest.matchers.MustMatchers
 
 import Accounts._
 import AccountActions._
+import GivenWhenThen._
 
-class GivenWhenThenSpec extends FunSpec with MustMatchers with GivenWhenThen {
+class GivenWhenThenSpec extends FunSpec with MustMatchers {
 
   val accountRef = Ref[AccountId]("account")
   val otherAccountRef = Ref[AccountId]("other account")
