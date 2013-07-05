@@ -5,8 +5,13 @@ import Scalaz._
 
 trait GivenWhenThen {
 
+  case class ActionWithActor[A, B](input: A, f: A => GWTState[B]) extends GWTState[B] {
+    override def apply(s: Context) = f(input)(s)
+    def andThen[C](f2: A => GWTState[C]) = ActionWithActor[A, C](input, i => f(i).flatMap(_ => f2(i)))
+  }
+  
   object DoWithActor {
-    def apply[A, B](input: A)(f: A => GWTState[B]): GWTState[B] = f(input)
+    def apply[A, B](input: A)(f: A => GWTState[B]): ActionWithActor[A, B] = ActionWithActor(input, f)
   }
   
   val the = DoWithActor
@@ -24,7 +29,7 @@ trait GivenWhenThen {
   val and_ = DoWithoutActor
 
   type GWTState[A] = State[Context, A]
-
+  
   def verify[A](s: GWTState[A], context: Context = Context.empty): (Context, A) = context.verify[A](s)
 }
 

@@ -41,9 +41,9 @@ class GivenWhenThenSpec extends FunSpec with MustMatchers {
     it("compose with Givens") {
       val (context, (newBalance1, newBalance2)) = defaultAccountsContext.verify(for {
         _ <- givenThe(testUser)      { createsAnAccount(accountRef) }
+             .andThen                { deposits(accountRef, 100) }
         _ <- givenThe(otherTestUser) { createsAnAccount(otherAccountRef) }
-        _ <- givenThe(testUser)      { deposits(accountRef, 100) }
-        _ <- givenThe(otherTestUser) { deposits(otherAccountRef, 200) }
+             .andThen                { deposits(otherAccountRef, 200) }
 
         balances <- whenThe(admin) { transfers(accountRef, otherAccountRef, 50) }
       } yield balances)
