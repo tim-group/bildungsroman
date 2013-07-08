@@ -6,7 +6,7 @@ scalaVersion := "2.9.2"
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
-crossScalaVersions := Seq("2.9.0-1", "2.9.1", "2.9.2", "2.10.0")
+crossScalaVersions := Seq("2.9.2", "2.10.0")
 
 libraryDependencies ++=  Seq(
   "org.scalaz" %% "scalaz-core" % "7.0.1",
