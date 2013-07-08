@@ -8,13 +8,10 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 crossScalaVersions := Seq("2.9.0-1", "2.9.1", "2.9.2", "2.10.0")
 
-libraryDependencies <++= scalaVersion(specs2Dependencies(_, "compile"))
-
 libraryDependencies ++=  Seq(
   "org.scalaz" %% "scalaz-core" % "7.0.1",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
-
 
 /////////////////////////////////////////////////////////////////////
 // Deploy to Sonatype using SBT
