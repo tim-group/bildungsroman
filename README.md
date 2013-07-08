@@ -1,6 +1,8 @@
 bildungsroman
 =============
 
+[![Build Status](https://travis-ci.org/youdevise/bildungsroman.png)](https://travis-ci.org/youdevise/bildungsroman)
+
 [Narrative](http://github.com/youdevise/narrative)-style testing for Scala - see [this blogpost](https://devblog.timgroup.com/2013/07/05/narrative-style-testing-with-bildungsroman/) for details.
 
 Example code:
