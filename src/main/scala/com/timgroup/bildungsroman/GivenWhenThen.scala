@@ -38,13 +38,12 @@ object GivenWhenThen extends GivenWhenThen
 import GivenWhenThen._
 
 case class Ref[A](id: String = java.util.UUID.randomUUID.toString) extends GWTState[A] {
-  private val self = this
   override def apply(s: Context): (Context, A) = s.get(this) match {
     case Some(value) => (s, value)
     case None => throw new MissingRefException(this) 
   }
 
-  def :=(value: A): GWTState[A] = new GWTState[A] { override def apply(s: Context) = (s.updated(self, value), value) }
+  def :=(value: A): GWTState[A] = modify((_:Context).updated(this, value)).flatMap(_ => this)
 
   def /=(f: A => A): GWTState[A] = for {
     oldValue <- this
@@ -53,7 +52,7 @@ case class Ref[A](id: String = java.util.UUID.randomUUID.toString) extends GWTSt
 
   def set(value: A) = :=(value)
   def update(f: A => A) = /=(f)
-  def get: GWTState[Option[A]] = new GWTState[Option[A]] { override def apply(s: Context) = (s, s.get(self)) }
+  def get: GWTState[Option[A]] = gets(_.get(this))
   def orElse(alternative: A): GWTState[A] = get.map(_.getOrElse(alternative))
   
   def ->(value: A) = RefValue(this, value)
