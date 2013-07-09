@@ -23,7 +23,7 @@ describe("A calculator") {
 }
 ```
 
-Use it in your project:
+Use it in your project - add to build.sbt:
 
 ```scala
 libraryDependencies += "com.timgroup" %% "bildungsroman" % "0.1.0" % "test"
